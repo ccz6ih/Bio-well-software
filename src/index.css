@@ -1,0 +1,129 @@
+:root {
+  /* Bio-Well Brand Colors */
+  --bw-deep:       #04080f;
+  --bw-void:       #070d18;
+  --bw-navy:       #0a1628;
+  --bw-panel:      #0d1f38;
+  --bw-card:       #112240;
+  --bw-border:     rgba(0, 140, 255, 0.12);
+  --bw-border-hi:  rgba(0, 180, 255, 0.28);
+
+  /* Bio-Well Blue Spectrum */
+  --bw-blue-dim:   #0a4a8c;
+  --bw-blue:       #0077cc;
+  --bw-blue-mid:   #0099ee;
+  --bw-blue-hi:    #22bbff;
+  --bw-blue-glow:  #55d0ff;
+  --bw-cyan:       #00e5ff;
+
+  /* Energy Colors */
+  --bw-gold:       #f0c040;
+  --bw-green:      #00e0a0;
+  --bw-violet:     #8866ff;
+  --bw-rose:       #ff4488;
+  --bw-orange:     #ff8833;
+
+  /* Text */
+  --bw-text-primary:   #e8f4ff;
+  --bw-text-secondary: #7aafd4;
+  --bw-text-muted:     #3a6080;
+
+  /* Fonts */
+  --font-display: 'Outfit', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+  --font-serif:   'Crimson Pro', serif;
+
+  /* Layout */
+  --sidebar-w: 220px;
+  --topbar-h:  56px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bw-deep);
+  color: var(--bw-text-primary);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bw-navy); }
+::-webkit-scrollbar-thumb { background: var(--bw-blue-dim); border-radius: 2px; }
+
+/* Keyframes */
+@keyframes pulse-ring {
+  0%   { transform: scale(0.9); opacity: 0.8; }
+  50%  { transform: scale(1.05); opacity: 0.4; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes spin-slow-rev {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92%       { opacity: 1; }
+  93%       { opacity: 0.6; }
+  94%       { opacity: 1; }
+  96%       { opacity: 0.8; }
+  97%       { opacity: 1; }
+}
+@keyframes data-scroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(var(--orbit-r)) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(var(--orbit-r)) rotate(-360deg); }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%       { transform: scale(1.06); opacity: 1; }
+}
+@keyframes scan-line {
+  0%   { top: 0%; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes count-up-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-in {
+  0%   { opacity: 0; transform: translateY(-12px) scale(0.95); }
+  10%  { opacity: 1; transform: translateY(0) scale(1); }
+  85%  { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-8px) scale(0.95); }
+}
+@keyframes micro-burst {
+  0%   { opacity: 0.8; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--burst-x), var(--burst-y)) scale(0); }
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  :root { --sidebar-w: 60px; }
+}
+@media (max-width: 900px) {
+  :root { --sidebar-w: 0px; }
+}
