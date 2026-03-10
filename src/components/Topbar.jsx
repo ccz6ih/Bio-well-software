@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { CURRENT_PATIENT, DEVICE_INFO } from '../data/mockData.js'
 
 const PAGE_TITLES = {
-  dashboard: { title: 'Energy Dashboard', sub: 'Real-time biofield overview' },
-  scan:      { title: 'Live GDV Scan',    sub: 'Electrophotonic capture in progress' },
-  chakra:    { title: 'Chakra Analysis',   sub: 'Energy center mapping' },
-  organs:    { title: 'Organ Energy Map',  sub: 'Biofield organ correlation' },
-  tracker:   { title: 'Wellness Tracker',   sub: 'Trend monitoring & goals' },
-  history:   { title: 'Session History',   sub: 'Patient progress over time' },
-  reports:   { title: 'Assessment Report', sub: 'Generated report preview' },
-  settings:  { title: 'Settings',          sub: 'Device & display configuration' },
+  dashboard:  { title: 'Energy Dashboard',   sub: 'Real-time biofield overview' },
+  scan:       { title: 'Live GDV Scan',       sub: 'Electrophotonic capture in progress' },
+  chakra:     { title: 'Chakra Analysis',     sub: 'Energy center mapping' },
+  aura:       { title: 'Aura Field',          sub: 'GDV sector energy distribution' },
+  biorhythms: { title: 'Biorhythms',          sub: 'Physical · Emotional · Intellectual cycles' },
+  organs:     { title: 'Organ Energy Map',    sub: 'Biofield organ correlation' },
+  tracker:    { title: 'Wellness Tracker',    sub: 'Trend monitoring & goals' },
+  history:    { title: 'Session History',     sub: 'Patient progress over time' },
+  reports:    { title: 'Assessment Report',   sub: 'Generated report preview' },
+  settings:   { title: 'Settings',            sub: 'Device & display configuration' },
 }
 
 export default function Topbar({ page }) {
@@ -54,7 +56,7 @@ export default function Topbar({ page }) {
 
       {/* Patient */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 12px', borderRadius: 8, background: 'var(--bw-panel)', border: '1px solid var(--bw-border)' }}>
-        <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'linear-gradient(135deg, var(--bw-blue), var(--bw-blue-dim))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: 'white' }}>{CURRENT_PATIENT.initials}</div>
+        <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'linear-gradient(135deg, var(--bw-blue), var(--bw-blue-dim, #003388))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: 'white' }}>{CURRENT_PATIENT.initials}</div>
         <div>
           <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--bw-text-primary)' }}>{CURRENT_PATIENT.name}</div>
           <div style={{ fontSize: 9, color: 'var(--bw-text-muted)', letterSpacing: '0.05em' }}>Session #{CURRENT_PATIENT.sessionId}</div>
@@ -62,7 +64,7 @@ export default function Topbar({ page }) {
       </div>
 
       {/* Clock */}
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--bw-text-muted)', letterSpacing: '0.08em', animation: 'flicker 8s infinite' }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--bw-text-muted)', letterSpacing: '0.08em' }}>
         {time.toLocaleTimeString('en-US', { hour12: false })}
       </div>
     </div>

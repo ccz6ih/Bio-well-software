@@ -5,6 +5,8 @@ import LoginPage from './pages/LoginPage.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ScanPage from './pages/ScanPage.jsx'
 import ChakraPage from './pages/ChakraPage.jsx'
+import AuraPage from './pages/AuraPage.jsx'
+import BiorhythmsPage from './pages/BiorhythmsPage.jsx'
 import HistoryPage from './pages/HistoryPage.jsx'
 import ReportPage from './pages/ReportPage.jsx'
 import OrgansPage from './pages/OrgansPage.jsx'
@@ -12,14 +14,16 @@ import SettingsPage from './pages/SettingsPage.jsx'
 import TrackerPage from './pages/TrackerPage.jsx'
 
 const PAGES = {
-  dashboard: Dashboard,
-  scan:      ScanPage,
-  chakra:    ChakraPage,
-  organs:    OrgansPage,
-  tracker:   TrackerPage,
-  history:   HistoryPage,
-  reports:   ReportPage,
-  settings:  SettingsPage,
+  dashboard:   Dashboard,
+  scan:        ScanPage,
+  chakra:      ChakraPage,
+  aura:        AuraPage,
+  biorhythms:  BiorhythmsPage,
+  organs:      OrgansPage,
+  tracker:     TrackerPage,
+  history:     HistoryPage,
+  reports:     ReportPage,
+  settings:    SettingsPage,
 }
 
 export default function App() {

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 
 const NAV = [
-  { id: 'dashboard', icon: '⬡', label: 'Dashboard' },
-  { id: 'scan',      icon: '◎', label: 'Live Scan' },
-  { id: 'chakra',    icon: '❋', label: 'Chakras' },
-  { id: 'organs',    icon: '⬢', label: 'Organs' },
-  { id: 'tracker',   icon: '◈', label: 'Tracker' },
+  { id: 'dashboard',  icon: '⬡', label: 'Dashboard' },
+  { id: 'scan',       icon: '◎', label: 'Live Scan' },
+  { id: 'chakra',     icon: '❋', label: 'Chakras' },
+  { id: 'aura',       icon: '◉', label: 'Aura Field' },
+  { id: 'biorhythms', icon: '〜', label: 'Biorhythms' },
+  { id: 'organs',     icon: '⬢', label: 'Organs' },
+  { id: 'tracker',    icon: '◈', label: 'Tracker' },
 ]
 
 const BOTTOM = [
@@ -30,7 +32,7 @@ const s = {
     animation: 'breathe 3s ease-in-out infinite',
   },
   logoSub: { fontSize: 9, letterSpacing: '0.18em', color: 'var(--bw-text-muted)', textTransform: 'uppercase', marginTop: 1 },
-  nav: { flex: 1, padding: '12px 10px 0', display: 'flex', flexDirection: 'column', gap: 2 },
+  nav: { flex: 1, padding: '12px 10px 0', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' },
   section: { fontSize: 9, letterSpacing: '0.2em', color: 'var(--bw-text-muted)', padding: '14px 10px 6px', textTransform: 'uppercase' },
   navItem: (active) => ({
     display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px',
@@ -69,12 +71,8 @@ function NavItem({ item, active, onNav }) {
       title={item.label}
       style={{
         ...s.navItem(isActive),
-        justifyContent: 'center',
         ...(hover && !isActive ? {
           background: 'rgba(0,153,238,0.06)',
-          backgroundImage: 'linear-gradient(90deg, transparent, rgba(0,180,255,0.08), transparent)',
-          backgroundSize: '200% 100%',
-          animation: 'shimmer 1.5s linear infinite',
           color: 'var(--bw-blue-hi)',
         } : {}),
       }}
