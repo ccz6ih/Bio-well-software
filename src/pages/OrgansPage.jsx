@@ -16,15 +16,15 @@ function resolveColor(cssVar) {
 }
 
 const ORGAN_POSITIONS = {
-  Brain:              (cx, H) => ({ x: cx,      y: 0.10 * H }),
-  'Lungs (Left)':     (cx, H) => ({ x: cx - 34, y: 0.40 * H }),
-  'Lungs (Right)':    (cx, H) => ({ x: cx + 34, y: 0.40 * H }),
-  Heart:              (cx, H) => ({ x: cx,      y: 0.43 * H }),
-  Liver:              (cx, H) => ({ x: cx + 26, y: 0.57 * H }),
-  Stomach:            (cx, H) => ({ x: cx - 10, y: 0.61 * H }),
-  'Kidneys (Left)':   (cx, H) => ({ x: cx - 28, y: 0.70 * H }),
-  'Kidneys (Right)':  (cx, H) => ({ x: cx + 28, y: 0.70 * H }),
-  'Large Intestine':  (cx, H) => ({ x: cx,      y: 0.76 * H }),
+  'Nervous System':   (cx, H) => ({ x: cx,      y: 0.10 * H }),
+  Thyroid:            (cx, H) => ({ x: cx,      y: 0.28 * H }),
+  Lungs:              (cx, H) => ({ x: cx + 30, y: 0.38 * H }),
+  Heart:              (cx, H) => ({ x: cx - 10, y: 0.42 * H }),
+  Liver:              (cx, H) => ({ x: cx + 26, y: 0.52 * H }),
+  Adrenals:           (cx, H) => ({ x: cx - 24, y: 0.56 * H }),
+  Kidneys:            (cx, H) => ({ x: cx + 24, y: 0.62 * H }),
+  Urogenital:         (cx, H) => ({ x: cx - 20, y: 0.68 * H }),
+  Sacrum:             (cx, H) => ({ x: cx,      y: 0.76 * H }),
 }
 
 function OrganCanvas({ organs, activeIdx, onSelect }) {

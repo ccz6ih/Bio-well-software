@@ -3,15 +3,18 @@ import { CHAKRA_DATA } from '../data/mockData.js'
 
 const CHAKRAS = CHAKRA_DATA
 
+function isFiniteNum(...vals) {
+  return vals.every(v => typeof v === 'number' && isFinite(v) && !isNaN(v))
+}
+
 function ChakraCanvas({ activeId, onSelect }) {
   const canvasRef = useRef(null)
-  const frameRef = useRef(0)
-  const tRef = useRef(0)
+  const frameRef  = useRef(0)
+  const tRef      = useRef(0)
   const activeRef = useRef(activeId)
-  const imgRef = useRef(null)
+  const imgRef    = useRef(null)
   activeRef.current = activeId
 
-  // Load the human SVG once
   useEffect(() => {
     const img = new Image()
     img.src = '/images/human.svg'
@@ -22,14 +25,15 @@ function ChakraCanvas({ activeId, onSelect }) {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
-    const W = canvas.width, H = canvas.height
+    const W = canvas.width
+    const H = canvas.height
+    if (!W || !H) return
     const cx = W / 2
 
-    // Click handler
     const handleClick = (e) => {
       const rect = canvas.getBoundingClientRect()
       const mx = (e.clientX - rect.left) * (W / rect.width)
-      const my = (e.clientY - rect.top) * (H / rect.height)
+      const my = (e.clientY - rect.top)  * (H / rect.height)
       CHAKRAS.forEach(ch => {
         const cy2 = ch.y * H
         const dx = mx - cx, dy = my - cy2
@@ -40,17 +44,16 @@ function ChakraCanvas({ activeId, onSelect }) {
 
     function drawBody() {
       const img = imgRef.current
-      if (img) {
-        ctx.save()
-        const drawH = H * 0.92
-        const drawW = drawH * (img.width / img.height)
-        const dx = cx - drawW / 2
-        const dy = (H - drawH) / 2
-        ctx.globalAlpha = 0.35
-        ctx.drawImage(img, dx, dy, drawW, drawH)
-        ctx.globalAlpha = 1.0
-        ctx.restore()
-      }
+      if (!img) return
+      ctx.save()
+      const drawH = H * 0.92
+      const drawW = drawH * (img.width / img.height)
+      const dx = cx - drawW / 2
+      const dy = (H - drawH) / 2
+      ctx.globalAlpha = 0.35
+      ctx.drawImage(img, dx, dy, drawW, drawH)
+      ctx.globalAlpha = 1.0
+      ctx.restore()
     }
 
     function draw() {
@@ -68,33 +71,39 @@ function ChakraCanvas({ activeId, onSelect }) {
       }
 
       // Vertical energy channel
-      const chanGrad = ctx.createLinearGradient(cx, 0, cx, H)
-      chanGrad.addColorStop(0, 'rgba(150,100,255,0.3)')
-      chanGrad.addColorStop(0.5, 'rgba(0,200,255,0.15)')
-      chanGrad.addColorStop(1, 'rgba(255,60,60,0.3)')
-      ctx.strokeStyle = chanGrad
-      ctx.lineWidth = 1.5
-      ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke()
+      if (isFiniteNum(cx, H)) {
+        const chanGrad = ctx.createLinearGradient(cx, 0, cx, H)
+        chanGrad.addColorStop(0,   'rgba(150,100,255,0.3)')
+        chanGrad.addColorStop(0.5, 'rgba(0,200,255,0.15)')
+        chanGrad.addColorStop(1,   'rgba(255,60,60,0.3)')
+        ctx.strokeStyle = chanGrad
+        ctx.lineWidth = 1.5
+        ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke()
+      }
 
       drawBody()
 
-      // Draw chakras
+      // Draw each chakra
       CHAKRAS.forEach(ch => {
         const cy2 = ch.y * H
+        if (!isFiniteNum(cx, cy2)) return   // ← the key guard
+
         const isActive = activeRef.current === ch.id
         const pulse = 1 + Math.sin(t * 0.05 + ch.hue * 0.02) * 0.12
         const r = (isActive ? 16 : 11) * pulse
 
-        // Outer glow
-        if (isActive) {
-          const glow = ctx.createRadialGradient(cx, cy2, 0, cx, cy2, 36)
-          glow.addColorStop(0, `${ch.color}55`)
-          glow.addColorStop(1, 'rgba(0,0,0,0)')
-          ctx.fillStyle = glow
-          ctx.beginPath(); ctx.arc(cx, cy2, 36, 0, Math.PI * 2); ctx.fill()
+        // Outer glow (active only)
+        if (isActive && isFiniteNum(r)) {
+          try {
+            const glow = ctx.createRadialGradient(cx, cy2, 0, cx, cy2, 36)
+            glow.addColorStop(0, `${ch.color}55`)
+            glow.addColorStop(1, 'rgba(0,0,0,0)')
+            ctx.fillStyle = glow
+            ctx.beginPath(); ctx.arc(cx, cy2, 36, 0, Math.PI * 2); ctx.fill()
+          } catch (_) {}
         }
 
-        // Spinning rings
+        // Spinning dashed ring
         ctx.save()
         ctx.translate(cx, cy2)
         ctx.rotate(t * 0.02 * (ch.hue % 2 === 0 ? 1 : -1))
@@ -105,21 +114,27 @@ function ChakraCanvas({ activeId, onSelect }) {
         ctx.setLineDash([])
         ctx.restore()
 
-        // Core orb
-        const orb = ctx.createRadialGradient(cx, cy2, 0, cx, cy2, r)
-        orb.addColorStop(0, `${ch.color}ff`)
-        orb.addColorStop(0.5, `${ch.color}99`)
-        orb.addColorStop(1, `${ch.color}11`)
-        ctx.fillStyle = orb
-        ctx.beginPath(); ctx.arc(cx, cy2, r, 0, Math.PI * 2); ctx.fill()
+        // Core orb radial gradient
+        if (isFiniteNum(r)) {
+          try {
+            const orb = ctx.createRadialGradient(cx, cy2, 0, cx, cy2, r)
+            orb.addColorStop(0,   `${ch.color}ff`)
+            orb.addColorStop(0.5, `${ch.color}99`)
+            orb.addColorStop(1,   `${ch.color}11`)
+            ctx.fillStyle = orb
+          } catch (_) {
+            ctx.fillStyle = ch.color
+          }
+          ctx.beginPath(); ctx.arc(cx, cy2, r, 0, Math.PI * 2); ctx.fill()
+        }
 
         // Bloom shadow
-        ctx.shadowBlur = isActive ? 20 : 10
+        ctx.shadowBlur  = isActive ? 20 : 10
         ctx.shadowColor = ch.color
         ctx.beginPath(); ctx.arc(cx, cy2, r * 0.6, 0, Math.PI * 2); ctx.fill()
         ctx.shadowBlur = 0
 
-        // Value bar to the side
+        // Side energy bar
         const barX = cx + 22
         const barH = 28 * (ch.val / 100)
         ctx.fillStyle = `${ch.color}33`
@@ -131,6 +146,7 @@ function ChakraCanvas({ activeId, onSelect }) {
       tRef.current++
       frameRef.current = requestAnimationFrame(draw)
     }
+
     draw()
     return () => {
       cancelAnimationFrame(frameRef.current)
@@ -158,7 +174,7 @@ function ChakraDetail({ chakra }) {
     </div>
   )
 
-  const r = 36
+  const r    = 36
   const circ = 2 * Math.PI * r
   const dash = circ * (chakra.val / 100)
 
@@ -173,7 +189,8 @@ function ChakraDetail({ chakra }) {
             transform="rotate(-90 45 45)"
             style={{ filter: `drop-shadow(0 0 8px ${chakra.color})` }}
           />
-          <text x={45} y={51} textAnchor="middle" fill={chakra.color} fontSize={18} fontWeight="bold" fontFamily="var(--font-mono)">{chakra.val}</text>
+          <text x={45} y={51} textAnchor="middle" fill={chakra.color}
+            fontSize={18} fontWeight="bold" fontFamily="var(--font-mono)">{chakra.val}</text>
         </svg>
         <div>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 20, fontWeight: 300, color: chakra.color, fontStyle: 'italic' }}>{chakra.name}</div>
@@ -209,8 +226,8 @@ export default function ChakraPage() {
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: 20, maxWidth: 900, animation: 'fade-in-up 0.5s ease both' }}>
 
-        {/* Canvas */}
-        <div style={{ background: 'var(--bw-panel)', border: '1px solid var(--bw-border)', borderRadius: 14, padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* Canvas column */}
+        <div style={{ background: 'var(--bw-panel)', border: '1px solid var(--bw-border)', borderRadius: 14, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--bw-text-muted)', textTransform: 'uppercase', marginBottom: 12, alignSelf: 'flex-start' }}>Energy Body Map</div>
           <ChakraCanvas activeId={activeId} onSelect={setActiveId} />
           <div style={{ fontSize: 9, color: 'var(--bw-text-muted)', marginTop: 8, textAlign: 'center' }}>Click a chakra to inspect</div>
@@ -219,25 +236,21 @@ export default function ChakraPage() {
         {/* Right panel */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-          {/* Detail card */}
           <div style={{ background: 'var(--bw-panel)', border: '1px solid var(--bw-border)', borderRadius: 14, padding: 20 }}>
             <div style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--bw-text-muted)', textTransform: 'uppercase', marginBottom: 14 }}>Chakra Detail</div>
             <ChakraDetail chakra={activeChakra} />
           </div>
 
-          {/* All chakras mini list */}
           <div style={{ background: 'var(--bw-panel)', border: '1px solid var(--bw-border)', borderRadius: 14, padding: 20 }}>
             <div style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--bw-text-muted)', textTransform: 'uppercase', marginBottom: 12 }}>All Centers</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {CHAKRAS.map(ch => (
-                <div key={ch.id}
-                  onClick={() => setActiveId(ch.id)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
-                    background: activeId === ch.id ? `${ch.color}10` : 'transparent',
-                    border: `1px solid ${activeId === ch.id ? ch.color + '30' : 'transparent'}`,
-                    transition: 'all 0.2s',
-                  }}>
+                <div key={ch.id} onClick={() => setActiveId(ch.id)} style={{
+                  display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px',
+                  borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s',
+                  background: activeId === ch.id ? `${ch.color}10` : 'transparent',
+                  border: `1px solid ${activeId === ch.id ? ch.color + '30' : 'transparent'}`,
+                }}>
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: ch.color, boxShadow: `0 0 6px ${ch.color}`, flexShrink: 0 }} />
                   <div style={{ flex: 1, fontSize: 12, color: activeId === ch.id ? ch.color : 'var(--bw-text-secondary)', fontWeight: activeId === ch.id ? 600 : 400 }}>{ch.name}</div>
                   <div style={{ width: 60, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
@@ -248,6 +261,7 @@ export default function ChakraPage() {
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </div>
