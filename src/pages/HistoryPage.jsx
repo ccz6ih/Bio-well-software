@@ -136,13 +136,18 @@ export default function HistoryPage() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas || !axesA || !axesB) return
-    const dpr = window.devicePixelRatio || 1
-    const rect = canvas.getBoundingClientRect()
-    canvas.width = rect.width * dpr
-    canvas.height = rect.height * dpr
-    const ctx = canvas.getContext('2d')
-    ctx.scale(dpr, dpr)
-    drawRadar(ctx, rect.width, rect.height, axesA, axesB)
+    const render = () => {
+      const dpr = window.devicePixelRatio || 1
+      const rect = canvas.getBoundingClientRect()
+      canvas.width = rect.width * dpr
+      canvas.height = rect.height * dpr
+      const ctx = canvas.getContext('2d')
+      ctx.scale(dpr, dpr)
+      drawRadar(ctx, rect.width, rect.height, axesA, axesB)
+    }
+    render()
+    window.addEventListener('resize', render)
+    return () => window.removeEventListener('resize', render)
   }, [axesA, axesB])
 
   return (

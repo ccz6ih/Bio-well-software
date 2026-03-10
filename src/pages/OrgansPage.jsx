@@ -99,18 +99,22 @@ function OrganCanvas({ organs, activeIdx, onSelect }) {
         const posFn = ORGAN_POSITIONS[organ.name]
         if (!posFn) return
         const pos = posFn(cx, H)
+        if (!isFinite(pos.x) || !isFinite(pos.y)) return
         const hex = resolveColor(organ.color)
         const isActive = activeRef.current === idx
         const pulse = 1 + Math.sin(t * 0.05 + (organ.hue || 0) * 0.02) * 0.12
         const r = (isActive ? 14 : 9) * pulse
+        if (!isFinite(r) || r <= 0) return
 
         // Outer glow when selected
         if (isActive) {
-          const glow = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 32)
-          glow.addColorStop(0, `${hex}55`)
-          glow.addColorStop(1, 'rgba(0,0,0,0)')
-          ctx.fillStyle = glow
-          ctx.beginPath(); ctx.arc(pos.x, pos.y, 32, 0, Math.PI * 2); ctx.fill()
+          try {
+            const glow = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 32)
+            glow.addColorStop(0, `${hex}55`)
+            glow.addColorStop(1, 'rgba(0,0,0,0)')
+            ctx.fillStyle = glow
+            ctx.beginPath(); ctx.arc(pos.x, pos.y, 32, 0, Math.PI * 2); ctx.fill()
+          } catch (_) {}
         }
 
         // Spinning ring
@@ -125,11 +129,15 @@ function OrganCanvas({ organs, activeIdx, onSelect }) {
         ctx.restore()
 
         // Core orb with radial gradient
-        const orb = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, r)
-        orb.addColorStop(0, `${hex}ff`)
-        orb.addColorStop(0.5, `${hex}99`)
-        orb.addColorStop(1, `${hex}11`)
-        ctx.fillStyle = orb
+        try {
+          const orb = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, r)
+          orb.addColorStop(0, `${hex}ff`)
+          orb.addColorStop(0.5, `${hex}99`)
+          orb.addColorStop(1, `${hex}11`)
+          ctx.fillStyle = orb
+        } catch (_) {
+          ctx.fillStyle = hex
+        }
         ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2); ctx.fill()
 
         // Bloom shadow

@@ -215,11 +215,13 @@ export default function ReportPage({ onNav }) {
       <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #04080f; color: #e8f4ff; font-family: Outfit, sans-serif; padding: 40px 36px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        div { page-break-inside: avoid; }
         @media print {
           @page { margin: 12mm; size: A4; }
-          body { background: #04080f !important; }
+          body { background: #ffffff !important; color: #1a1a2e !important; }
+          div, span, p { color: #1a1a2e !important; border-color: rgba(0,0,0,0.15) !important; }
+          [style*="background"] { background: transparent !important; }
         }
-        div { page-break-inside: avoid; }
       </style>
       </head><body>
       <div style="text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(0,140,255,0.2)">

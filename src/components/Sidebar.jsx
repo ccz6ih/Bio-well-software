@@ -66,8 +66,10 @@ function NavItem({ item, active, onNav }) {
   const isActive = active === item.id
   return (
     <div
+      title={item.label}
       style={{
         ...s.navItem(isActive),
+        justifyContent: 'center',
         ...(hover && !isActive ? {
           background: 'rgba(0,153,238,0.06)',
           backgroundImage: 'linear-gradient(90deg, transparent, rgba(0,180,255,0.08), transparent)',
@@ -82,7 +84,7 @@ function NavItem({ item, active, onNav }) {
     >
       {isActive && <div style={s.activeDot} />}
       <span style={s.navIcon}>{item.icon}</span>
-      <span>{item.label}</span>
+      <span className="nav-label">{item.label}</span>
     </div>
   )
 }

@@ -150,18 +150,18 @@ export const FINGER_DATA = [
 
 // ── SESSION HISTORY ───────────────────────────────────────────────────────────
 export const SESSION_HISTORY = [
-  { id: 1,  date: '2024-12-15', score: 55, stress: 51, vitality: 58, label: 'Dec 15' },
-  { id: 2,  date: '2025-01-12', score: 58, stress: 47, vitality: 61, label: 'Jan 12' },
-  { id: 3,  date: '2025-02-03', score: 60, stress: 45, vitality: 63, label: 'Feb 3'  },
-  { id: 4,  date: '2025-02-19', score: 59, stress: 44, vitality: 62, label: 'Feb 19' },
-  { id: 5,  date: '2025-03-07', score: 61, stress: 42, vitality: 64, label: 'Mar 7'  },
-  { id: 6,  date: '2025-03-24', score: 64, stress: 39, vitality: 67, label: 'Mar 24' },
-  { id: 7,  date: '2025-04-10', score: 63, stress: 37, vitality: 66, label: 'Apr 10' },
-  { id: 8,  date: '2025-05-01', score: 67, stress: 35, vitality: 70, label: 'May 1'  },
-  { id: 9,  date: '2025-05-18', score: 65, stress: 33, vitality: 72, label: 'May 18' },
-  { id: 10, date: '2025-06-01', score: 69, stress: 31, vitality: 74, label: 'Jun 1'  },
-  { id: 11, date: '2025-06-10', score: 70, stress: 30, vitality: 75, label: 'Jun 10' },
-  { id: 12, date: '2025-06-18', score: 68, stress: 30, vitality: 72, label: 'Jun 18' },
+  { id: 1,  date: '2024-12-15', score: 55, stress: 51, vitality: 58, balance: 78, label: 'Dec 15' },
+  { id: 2,  date: '2025-01-12', score: 58, stress: 47, vitality: 61, balance: 80, label: 'Jan 12' },
+  { id: 3,  date: '2025-02-03', score: 60, stress: 45, vitality: 63, balance: 82, label: 'Feb 3'  },
+  { id: 4,  date: '2025-02-19', score: 59, stress: 44, vitality: 62, balance: 81, label: 'Feb 19' },
+  { id: 5,  date: '2025-03-07', score: 61, stress: 42, vitality: 64, balance: 84, label: 'Mar 7'  },
+  { id: 6,  date: '2025-03-24', score: 64, stress: 39, vitality: 67, balance: 86, label: 'Mar 24' },
+  { id: 7,  date: '2025-04-10', score: 63, stress: 37, vitality: 66, balance: 85, label: 'Apr 10' },
+  { id: 8,  date: '2025-05-01', score: 67, stress: 35, vitality: 70, balance: 88, label: 'May 1'  },
+  { id: 9,  date: '2025-05-18', score: 65, stress: 33, vitality: 72, balance: 87, label: 'May 18' },
+  { id: 10, date: '2025-06-01', score: 69, stress: 31, vitality: 74, balance: 90, label: 'Jun 1'  },
+  { id: 11, date: '2025-06-10', score: 70, stress: 30, vitality: 75, balance: 93, label: 'Jun 10' },
+  { id: 12, date: '2025-06-18', score: 68, stress: 30, vitality: 72, balance: 93, label: 'Jun 18' },
 ]
 
 // ── DEVICE ────────────────────────────────────────────────────────────────────
