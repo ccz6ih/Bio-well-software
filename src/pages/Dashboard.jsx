@@ -255,11 +255,14 @@ function AuraCanvas() {
         const chy = cy + 4 + yOff
         const pulse = 1 + Math.sin(t * 0.06 + idx * 0.9) * 0.2
         const r = 4 * pulse
-        const g = ctx.createRadialGradient(cx, chy, 0, cx, chy, r * 2.5)
-        g.addColorStop(0, chakraColors[idx] + 'ff')
-        g.addColorStop(1, chakraColors[idx] + '00')
-        ctx.fillStyle = g
-        ctx.beginPath(); ctx.arc(cx, chy, r * 2.5, 0, Math.PI * 2); ctx.fill()
+        if (!isFinite(r) || !isFinite(chy)) return
+        try {
+          const g = ctx.createRadialGradient(cx, chy, 0, cx, chy, r * 2.5)
+          g.addColorStop(0, chakraColors[idx] + 'ff')
+          g.addColorStop(1, chakraColors[idx] + '00')
+          ctx.fillStyle = g
+          ctx.beginPath(); ctx.arc(cx, chy, r * 2.5, 0, Math.PI * 2); ctx.fill()
+        } catch (_) {}
         ctx.fillStyle = chakraColors[idx]
         ctx.shadowBlur = 10; ctx.shadowColor = chakraColors[idx]
         ctx.beginPath(); ctx.arc(cx, chy, r, 0, Math.PI * 2); ctx.fill()

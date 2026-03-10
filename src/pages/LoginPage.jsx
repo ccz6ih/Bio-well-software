@@ -83,6 +83,7 @@ export default function LoginPage({ onLogin }) {
               onChange={e => setUser(e.target.value)}
               style={inputStyle}
               autoFocus
+              autoComplete="username"
               placeholder="Enter username"
             />
           </div>
@@ -101,6 +102,7 @@ export default function LoginPage({ onLogin }) {
               value={pass}
               onChange={e => setPass(e.target.value)}
               style={inputStyle}
+              autoComplete="current-password"
               placeholder="Enter password"
             />
           </div>
