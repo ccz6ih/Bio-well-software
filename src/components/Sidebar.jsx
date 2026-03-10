@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const NAV = [
   { id: 'dashboard', icon: '⬡', label: 'Dashboard' },
@@ -61,6 +61,32 @@ const s = {
   deviceSub: { fontSize: 9, color: 'var(--bw-text-muted)', marginTop: 2 },
 }
 
+function NavItem({ item, active, onNav }) {
+  const [hover, setHover] = useState(false)
+  const isActive = active === item.id
+  return (
+    <div
+      style={{
+        ...s.navItem(isActive),
+        ...(hover && !isActive ? {
+          background: 'rgba(0,153,238,0.06)',
+          backgroundImage: 'linear-gradient(90deg, transparent, rgba(0,180,255,0.08), transparent)',
+          backgroundSize: '200% 100%',
+          animation: 'shimmer 1.5s linear infinite',
+          color: 'var(--bw-blue-hi)',
+        } : {}),
+      }}
+      onClick={() => onNav(item.id)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      {isActive && <div style={s.activeDot} />}
+      <span style={s.navIcon}>{item.icon}</span>
+      <span>{item.label}</span>
+    </div>
+  )
+}
+
 export default function Sidebar({ active, onNav }) {
   return (
     <div style={s.sidebar}>
@@ -72,22 +98,14 @@ export default function Sidebar({ active, onNav }) {
       <div style={s.nav}>
         <div style={s.section}>Analysis</div>
         {NAV.map(item => (
-          <div key={item.id} style={s.navItem(active === item.id)} onClick={() => onNav(item.id)}>
-            {active === item.id && <div style={s.activeDot} />}
-            <span style={s.navIcon}>{item.icon}</span>
-            <span>{item.label}</span>
-          </div>
+          <NavItem key={item.id} item={item} active={active} onNav={onNav} />
         ))}
       </div>
 
       <div style={s.bottom}>
         <div style={s.section}>Management</div>
         {BOTTOM.map(item => (
-          <div key={item.id} style={s.navItem(active === item.id)} onClick={() => onNav(item.id)}>
-            {active === item.id && <div style={s.activeDot} />}
-            <span style={s.navIcon}>{item.icon}</span>
-            <span>{item.label}</span>
-          </div>
+          <NavItem key={item.id} item={item} active={active} onNav={onNav} />
         ))}
       </div>
 

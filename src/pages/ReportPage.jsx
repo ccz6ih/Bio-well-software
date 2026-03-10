@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import {
   CURRENT_PATIENT, ANALYSIS, LIFESTYLE, CHAKRA_DATA,
-  DOSHAS, MERIDIANS, ORGAN_SYSTEMS, REPORT
+  DOSHAS, MERIDIANS, ORGAN_SYSTEMS, REPORT, SESSION_HISTORY
 } from '../data/mockData.js'
 
 // ── helpers ────────────────────────────────────────────────────────────────
@@ -197,8 +197,15 @@ function OrgansTable() {
 }
 
 // ── Main ReportPage ─────────────────────────────────────────────────────────
-export default function ReportPage() {
+export default function ReportPage({ onNav }) {
   const printRef = useRef(null)
+  const [toast, setToast] = useState(null)
+  const [showCompare, setShowCompare] = useState(false)
+
+  const showToast = (msg, color = 'var(--bw-green)') => {
+    setToast({ msg, color })
+    setTimeout(() => setToast(null), 2800)
+  }
 
   const handlePrint = () => {
     const win = window.open('', '_blank', 'width=900,height=1000')
@@ -207,33 +214,84 @@ export default function ReportPage() {
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&family=Crimson+Pro:ital@0;1&display=swap" rel="stylesheet">
       <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #04080f; color: #e8f4ff; font-family: Outfit, sans-serif; padding: 24px; }
-        @media print { @page { margin: 10mm; } body { background: #04080f; } }
+        body { background: #04080f; color: #e8f4ff; font-family: Outfit, sans-serif; padding: 40px 36px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        @media print {
+          @page { margin: 12mm; size: A4; }
+          body { background: #04080f !important; }
+        }
+        div { page-break-inside: avoid; }
       </style>
       </head><body>
+      <div style="text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(0,140,255,0.2)">
+        <div style="font-size:28px;font-weight:700;color:#22bbff;letter-spacing:0.02em">Bio-Well</div>
+        <div style="font-size:11px;color:#3a6080;letter-spacing:0.2em;text-transform:uppercase;margin-top:4px">GDV Bioelectrography · Energy Field Assessment Report</div>
+      </div>
       ${printRef.current?.innerHTML || ''}
-      <script>window.onload = () => { window.print(); }<\/script>
+      <div style="margin-top:24px;padding-top:12px;border-top:1px solid rgba(0,140,255,0.1);text-align:center;font-size:9px;color:#3a6080">
+        Generated ${new Date().toLocaleDateString()} · Bio-Well Intelligence Platform · Not a medical diagnostic
+      </div>
+      <script>
+        window.onload = () => {
+          setTimeout(() => window.print(), 500);
+        };
+      <\/script>
       </body></html>`)
     win.document.close()
   }
 
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `Bio-Well Report — ${CURRENT_PATIENT.name}`,
+        text: `Energy assessment for ${CURRENT_PATIENT.name} · Score: ${REPORT.overallScore} · ${CURRENT_PATIENT.scanDate}`,
+      }).catch(() => {})
+    } else {
+      navigator.clipboard?.writeText(
+        `Bio-Well Report — ${CURRENT_PATIENT.name}\nScore: ${REPORT.overallScore} · Stress: 2.99 Optimal\nDate: ${CURRENT_PATIENT.scanDate}\n\n${REPORT.summary}`
+      )
+      showToast('Report summary copied to clipboard')
+    }
+  }
+
+  const handleCompare = () => {
+    if (onNav) onNav('history')
+  }
+
   const chakraAvgAlign = Math.round(CHAKRA_DATA.reduce((s, c) => s + c.alignment, 0) / CHAKRA_DATA.length)
   const alerts = ORGAN_SYSTEMS.filter(o => o.alert && o.organ != null)
+  const prevSession = SESSION_HISTORY[SESSION_HISTORY.length - 2]
 
   return (
     <div style={{ height: '100%', overflowY: 'auto', padding: 20, background: 'var(--bw-deep)', animation: 'fade-in-up 0.5s ease both' }}>
+
+      {/* Toast */}
+      {toast && (
+        <div style={{ position: 'fixed', top: 80, right: 24, zIndex: 100, padding: '12px 20px', borderRadius: 10, background: 'var(--bw-panel)', border: `1px solid ${toast.color}44`, boxShadow: '0 8px 32px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', gap: 10, animation: 'toast-in 2.8s ease both' }}>
+          <div style={{ width: 20, height: 20, borderRadius: '50%', background: `${toast.color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, color: toast.color }}>✓</div>
+          <span style={{ fontSize: 12, color: toast.color, fontWeight: 600 }}>{toast.msg}</span>
+        </div>
+      )}
+
       {/* ── Action bar ── */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginBottom: 20 }}>
-        {[['↓ Download PDF', handlePrint, true], ['Share with Patient', null, false], ['Compare to Previous', null, false]].map(([label, fn, primary]) => (
-          <button key={label} onClick={fn} style={{
-            padding: '9px 22px', borderRadius: 8, cursor: 'pointer',
-            border: primary ? 'none' : '1px solid var(--bw-border-hi)',
-            background: primary ? 'linear-gradient(135deg, var(--bw-blue), var(--bw-blue-mid))' : 'transparent',
-            color: primary ? '#fff' : 'var(--bw-text-secondary)',
-            fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: primary ? 600 : 400,
-            boxShadow: primary ? '0 0 16px rgba(0,120,220,0.35)' : 'none',
-          }}>{label}</button>
-        ))}
+        <button onClick={handlePrint} style={{
+          padding: '9px 22px', borderRadius: 8, cursor: 'pointer', border: 'none',
+          background: 'linear-gradient(135deg, var(--bw-blue), var(--bw-blue-mid))',
+          color: '#fff', fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 600,
+          boxShadow: '0 0 16px rgba(0,120,220,0.35)', transition: 'all 0.2s',
+        }}>↓ Download PDF</button>
+        <button onClick={handleShare} style={{
+          padding: '9px 22px', borderRadius: 8, cursor: 'pointer',
+          border: '1px solid var(--bw-border-hi)', background: 'transparent',
+          color: 'var(--bw-text-secondary)', fontFamily: 'var(--font-display)', fontSize: 13,
+          transition: 'all 0.2s',
+        }}>Share with Patient</button>
+        <button onClick={handleCompare} style={{
+          padding: '9px 22px', borderRadius: 8, cursor: 'pointer',
+          border: '1px solid var(--bw-border-hi)', background: 'transparent',
+          color: 'var(--bw-text-secondary)', fontFamily: 'var(--font-display)', fontSize: 13,
+          transition: 'all 0.2s',
+        }}>Compare to Previous</button>
       </div>
 
       {/* ── Report body ── */}

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { CURRENT_PATIENT } from '../data/mockData.js'
+import { CURRENT_PATIENT, DEVICE_INFO } from '../data/mockData.js'
 
 const PAGE_TITLES = {
   dashboard: { title: 'Energy Dashboard', sub: 'Real-time biofield overview' },
   scan:      { title: 'Live GDV Scan',    sub: 'Electrophotonic capture in progress' },
   chakra:    { title: 'Chakra Analysis',   sub: 'Energy center mapping' },
   organs:    { title: 'Organ Energy Map',  sub: 'Biofield organ correlation' },
+  tracker:   { title: 'Wellness Tracker',   sub: 'Trend monitoring & goals' },
   history:   { title: 'Session History',   sub: 'Patient progress over time' },
   reports:   { title: 'Assessment Report', sub: 'Generated report preview' },
   settings:  { title: 'Settings',          sub: 'Device & display configuration' },
@@ -40,6 +41,15 @@ export default function Topbar({ page }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 20, background: 'rgba(0,224,160,0.08)', border: '1px solid rgba(0,224,160,0.2)' }}>
         <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--bw-green)', boxShadow: '0 0 6px var(--bw-green)', animation: 'pulse-ring 2s ease-in-out infinite' }} />
         <span style={{ fontSize: 10, color: 'var(--bw-green)', letterSpacing: '0.12em', fontFamily: 'var(--font-mono)' }}>LIVE</span>
+      </div>
+
+      {/* Battery */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 8, background: 'var(--bw-panel)', border: '1px solid var(--bw-border)' }}>
+        <div style={{ width: 22, height: 12, borderRadius: 2, border: `1px solid ${DEVICE_INFO.battery > 30 ? 'var(--bw-green)' : 'var(--bw-rose)'}`, position: 'relative', padding: 1.5, display: 'flex', alignItems: 'stretch' }}>
+          <div style={{ position: 'absolute', right: -3, top: '50%', transform: 'translateY(-50%)', width: 2.5, height: 5, background: DEVICE_INFO.battery > 30 ? 'var(--bw-green)' : 'var(--bw-rose)', borderRadius: '0 1px 1px 0' }} />
+          <div style={{ flex: 1, borderRadius: 1, background: DEVICE_INFO.battery > 30 ? 'var(--bw-green)' : 'var(--bw-rose)', width: `${DEVICE_INFO.battery}%`, boxShadow: `0 0 4px ${DEVICE_INFO.battery > 30 ? 'var(--bw-green)' : 'var(--bw-rose)'}` }} />
+        </div>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: DEVICE_INFO.battery > 30 ? 'var(--bw-green)' : 'var(--bw-rose)' }}>{DEVICE_INFO.battery}%</span>
       </div>
 
       {/* Patient */}

@@ -353,9 +353,9 @@ function StatCard({ stat }) {
 
 // ─── ALERT ROW ────────────────────────────────────────────────────────────────
 const ALERTS = [
-  { type: 'warn',    icon: '⚠', color: 'var(--bw-orange)', msg: 'Stomach zone below optimal threshold — consider digestive support protocol' },
-  { type: 'info',    icon: '◈', color: 'var(--bw-blue-hi)', msg: 'Heart & kidney meridians performing at optimal levels' },
-  { type: 'success', icon: '✓', color: 'var(--bw-green)',   msg: 'Energy field coherence 91% — highest recorded in 8 sessions' },
+  { type: 'warn',    icon: '⚠', color: 'var(--bw-orange)', msg: 'Stomach zone below optimal threshold — consider digestive support protocol', link: 'organs',  linkLabel: 'View Organs →' },
+  { type: 'info',    icon: '◈', color: 'var(--bw-blue-hi)', msg: 'Heart & kidney meridians performing at optimal levels',                     link: 'chakra',  linkLabel: 'View Chakras →' },
+  { type: 'success', icon: '✓', color: 'var(--bw-green)',   msg: 'Energy field coherence 91% — highest recorded in 8 sessions',               link: 'history', linkLabel: 'View History →' },
 ]
 
 // ─── MAIN DASHBOARD ──────────────────────────────────────────────────────────
@@ -472,7 +472,10 @@ export default function Dashboard({ onNav }) {
               border: `1px solid ${a.color}20`,
             }}>
               <span style={{ fontSize: 14, color: a.color, lineHeight: 1.3, flexShrink: 0 }}>{a.icon}</span>
-              <span style={{ fontSize: 11, color: 'var(--bw-text-secondary)', lineHeight: 1.5 }}>{a.msg}</span>
+              <div style={{ flex: 1 }}>
+                <span style={{ fontSize: 11, color: 'var(--bw-text-secondary)', lineHeight: 1.5 }}>{a.msg}</span>
+                {a.link && <span onClick={() => onNav && onNav(a.link)} style={{ fontSize: 10, color: a.color, cursor: 'pointer', marginLeft: 8, fontWeight: 600, whiteSpace: 'nowrap' }}>{a.linkLabel}</span>}
+              </div>
             </div>
           ))}
         </div>
